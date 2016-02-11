@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ab4645_Breakout
 {
@@ -16,6 +17,8 @@ namespace ab4645_Breakout
 		public override string GameDisplayName { get { return "ab4645-Breakout"; } }
 #endif
         GameplayManager gm;
+        public static Random rand = new Random();
+
 
         public Game1()
         {
@@ -50,7 +53,11 @@ namespace ab4645_Breakout
 #endif
 
             AssetManager.AddTexture("pixel", Content.Load<Texture2D>("pixel"));
+            AssetManager.AddTexture("paddles", Content.Load<Texture2D>("paddles"));
+            AssetManager.AddTexture("block", Content.Load<Texture2D>("block"));
             AssetManager.AddTexture("ball", Content.Load<Texture2D>("ball_spritesheet"));
+            AssetManager.AddTexture("softparticle", Content.Load<Texture2D>("softparticle"));
+            AssetManager.AddTexture("level1bg", Content.Load<Texture2D>("level1bg"));
             gm = new GameplayManager(Content.RootDirectory);
             
         }
@@ -89,6 +96,7 @@ namespace ab4645_Breakout
             GraphicsDevice.Clear(Color.MidnightBlue);
 
             spriteBatch.Begin();
+            spriteBatch.Draw(AssetManager.GetTexture("level1bg"), Vector2.Zero, Color.White);
             gm.Draw(spriteBatch);
             spriteBatch.End();
 
