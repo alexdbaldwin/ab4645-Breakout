@@ -117,6 +117,9 @@ namespace ab4645_Breakout
         }
 
         public void Update(GameTime gameTime) {
+            //Run physics
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             switch (currentGameState)
             {
                 case GameState.Playing:
@@ -137,8 +140,7 @@ namespace ab4645_Breakout
                 bgLerpTime = 0.0f;
             }
             
-            //Run physics
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+            
         }
 
         private void UpdatePlaying(GameTime gameTime)

@@ -42,6 +42,10 @@ namespace ab4645_Breakout
             }
         }
 
+        public PlayerIndex Index {
+            get { return playerIndex; }
+        }
+
 
         public Player(GameplayManager gm, Paddle paddle, PlayerIndex playerIndex) {
             this.gm = gm;

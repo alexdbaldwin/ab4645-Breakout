@@ -55,7 +55,8 @@ namespace ab4645_Breakout
             AssetManager.AddTexture("pixel", Content.Load<Texture2D>("pixel"));
             AssetManager.AddTexture("paddles", Content.Load<Texture2D>("paddles"));
             AssetManager.AddTexture("block", Content.Load<Texture2D>("block"));
-            AssetManager.AddTexture("ball", Content.Load<Texture2D>("ball_spritesheet"));
+            //AssetManager.AddTexture("ball", Content.Load<Texture2D>("ball_spritesheet"));
+            AssetManager.AddTexture("balls", Content.Load<Texture2D>("balls"));
             AssetManager.AddTexture("softparticle", Content.Load<Texture2D>("softparticle"));
             AssetManager.AddTexture("level1bg", Content.Load<Texture2D>("level1bg"));
             gm = new GameplayManager(Content.RootDirectory);

@@ -31,7 +31,19 @@ namespace ab4645_Breakout
             this.radius = radius;
             this.maxY = maxY;
 
-            trail = ParticleEmitter.SpawnGenericProjectileEmitter(ConvertUnits.ToDisplayUnits(position));
+            switch (player.Index)
+            {
+                case PlayerIndex.One:
+                    trail = ParticleEmitter.SpawnGenericProjectileEmitterRed(ConvertUnits.ToDisplayUnits(position));
+                    break;
+                case PlayerIndex.Two:
+                    trail = ParticleEmitter.SpawnGenericProjectileEmitterBlue(ConvertUnits.ToDisplayUnits(position));
+                    break;
+                default:
+                    trail = ParticleEmitter.SpawnGenericProjectileEmitterRed(ConvertUnits.ToDisplayUnits(position));
+                    break;
+            }
+            
 
             body = BodyFactory.CreateCircle(world, radius, 1, position);
             body.BodyType = BodyType.Dynamic;
@@ -70,7 +82,18 @@ namespace ab4645_Breakout
         public override void Draw(SpriteBatch spriteBatch)
         {
             trail.Draw(spriteBatch);
-            spriteBatch.Draw(AssetManager.GetTexture("ball"), ConvertUnits.ToDisplayUnits(Position), null, player.BallColor, 0, new Vector2(10.0f, 10.0f), 1, SpriteEffects.None, 0);
+            switch (player.Index)
+            {
+                case PlayerIndex.One:
+                    spriteBatch.Draw(AssetManager.GetTexture("balls"), ConvertUnits.ToDisplayUnits(Position), new Rectangle(0, 0, 40, 40), Color.White, 0, new Vector2(20.0f, 20.0f), ConvertUnits.ToDisplayUnits(radius) / 20.0f, SpriteEffects.None, 0);
+                    break;
+                case PlayerIndex.Two:
+                    spriteBatch.Draw(AssetManager.GetTexture("balls"), ConvertUnits.ToDisplayUnits(Position), new Rectangle(40, 0, 40, 40), Color.White, 0, new Vector2(20.0f, 20.0f), ConvertUnits.ToDisplayUnits(radius) / 20.0f, SpriteEffects.None, 0);
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
     }

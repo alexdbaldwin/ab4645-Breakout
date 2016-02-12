@@ -102,7 +102,9 @@ namespace ab4645_Breakout
                     spriteBatch.Draw(AssetManager.GetTexture("paddles"), ConvertUnits.ToDisplayUnits(Position - new Vector2(width, height) / 2) + new Vector2(ConvertUnits.ToDisplayUnits(width) - 20, 0), new Rectangle(23, 0, 20, 21), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
                     break;
                 case PlayerIndex.Two:
-                    spriteBatch.Draw(AssetManager.GetTexture("paddles"), ConvertUnits.ToDisplayUnits(Position), null, Color.White, 0, new Vector2(0.5f, 0.5f), ConvertUnits.ToDisplayUnits(new Vector2(width, height)), SpriteEffects.None, 0);
+                    spriteBatch.Draw(AssetManager.GetTexture("paddles"), ConvertUnits.ToDisplayUnits(Position - new Vector2(width, height)/2), new Rectangle(43,0,20,21), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+                    spriteBatch.Draw(AssetManager.GetTexture("paddles"), ConvertUnits.ToDisplayUnits(Position - new Vector2(width, height) / 2) + new Vector2(20,0), new Rectangle(63, 0, 3, 21), Color.White, 0, Vector2.Zero, new Vector2((ConvertUnits.ToDisplayUnits(width) - 40)/3.0f,1), SpriteEffects.None, 0);
+                    spriteBatch.Draw(AssetManager.GetTexture("paddles"), ConvertUnits.ToDisplayUnits(Position - new Vector2(width, height) / 2) + new Vector2(ConvertUnits.ToDisplayUnits(width) - 20, 0), new Rectangle(66, 0, 20, 21), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
                     break;
                 default:
                     break;

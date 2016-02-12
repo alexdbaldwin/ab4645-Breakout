@@ -115,7 +115,7 @@ namespace ab4645_Breakout
             return pe;
         }
 
-        public static ParticleEmitter SpawnGenericProjectileEmitter(Vector2 position) {
+        public static ParticleEmitter SpawnGenericProjectileEmitterBlue(Vector2 position) {
             ParticleEmitter pe = new ParticleEmitter(AssetManager.GetTexture("softparticle"), position);
             pe.spawnDelay = 0.002f;
             pe.spawnTimer = pe.spawnDelay;
@@ -127,6 +127,25 @@ namespace ab4645_Breakout
             pe.lifetimeMax = 0.2f;
             pe.startColor = Color.BlueViolet;
             pe.endColor = Color.Orange;
+            pe.endColor.A = 200;
+            pe.startScale = 0.5f;
+            pe.endScale = 0.05f;
+            return pe;
+        }
+
+        public static ParticleEmitter SpawnGenericProjectileEmitterRed(Vector2 position)
+        {
+            ParticleEmitter pe = new ParticleEmitter(AssetManager.GetTexture("softparticle"), position);
+            pe.spawnDelay = 0.002f;
+            pe.spawnTimer = pe.spawnDelay;
+            pe.angleMin = 0;
+            pe.angleMax = 360;
+            pe.speedMin = 80;
+            pe.speedMax = 150;
+            pe.lifetimeMin = 0.05f;
+            pe.lifetimeMax = 0.2f;
+            pe.startColor = Color.Crimson;
+            pe.endColor = Color.Yellow;
             pe.endColor.A = 200;
             pe.startScale = 0.5f;
             pe.endScale = 0.05f;
