@@ -28,6 +28,7 @@ namespace ab4645_Breakout
         float bgLerpLength = 0.5f;
         SpriteFont mainFont;
         int blocksRemaining = 0;
+        float powerUpSpawnChance = 0.1f;
 
         string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level2.txt", "Content/Levels/level3.txt" };
         int levelIndex = 0;
@@ -150,6 +151,42 @@ namespace ab4645_Breakout
             
         }
 
+        private void SpawnRandomPowerUp(Vector2 position) {
+            gameObjects.Add(new PaddleSpeedDown(this, world, position));
+            //PowerUp.PowerUpType type = (PowerUp.PowerUpType)Game1.rand.Next(11);
+            //switch (type)
+            //{
+            //    case PowerUp.PowerUpType.PaddleSizeUp:
+            //        gameObjects.Add(new PaddleSizeUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSizeDown:
+            //        gameObjects.Add(new PaddleSizeDown(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.BallSizeUp:
+            //        break;
+            //    case PowerUp.PowerUpType.BallSizeDown:
+            //        break;
+            //    case PowerUp.PowerUpType.MultiBall:
+            //        break;
+            //    case PowerUp.PowerUpType.BallSpeedUp:
+            //        break;
+            //    case PowerUp.PowerUpType.BallSpeedDown:
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSpeedUp:
+            //        gameObjects.Add(new PaddleSpeedUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSpeedDown:
+            //        gameObjects.Add(new PaddleSpeedDown(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.StickyPaddle:
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleGun:
+            //        break;
+            //    default:
+            //        break;
+            //}
+        }
+
         private void UpdatePlaying(GameTime gameTime)
         {
             for (int i = 0; i < gameObjects.Count; i++)
@@ -163,7 +200,8 @@ namespace ab4645_Breakout
                     }
                     if (gameObjects[i] is Block) {
                         blocksRemaining--;
-                        gameObjects.Add(new PaddleSizeUp(this, world, gameObjects[i].Position));
+                        if (Game1.rand.NextDouble() < powerUpSpawnChance)
+                            SpawnRandomPowerUp(gameObjects[i].Position);
                     }
                     gameObjects[i].CleanUp();
                     gameObjects.RemoveAt(i--);

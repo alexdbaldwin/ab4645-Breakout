@@ -162,7 +162,10 @@
     <Compile Include="ParticleEmitter.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PowerUp.cs" />
+    <Compile Include="PowerUps\PaddleSizeDown.cs" />
     <Compile Include="PowerUps\PaddleSizeUp.cs" />
+    <Compile Include="PowerUps\PaddleSpeedDown.cs" />
+    <Compile Include="PowerUps\PaddleSpeedUp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Farseer\Settings.cs" />
   </ItemGroup>

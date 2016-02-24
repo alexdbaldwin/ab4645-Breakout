@@ -15,18 +15,20 @@ namespace ab4645_Breakout
     {
         public enum PowerUpType
         {
-            PaddleSizeUp,
-            PaddleSizeDown,
-            BallSizeUp,
-            BallSizeDown,
-            MultiBall,
-            BallSpeedUp,
-            BallSpeedDown,
-            PaddleSpeedUp,
-            PaddleSpeedDown,
-            StickyPaddle,
-            PaddleGun
+            PaddleSizeUp = 0,
+            PaddleSizeDown = 1,
+            BallSizeUp = 2,
+            BallSizeDown = 3,
+            MultiBall = 4,
+            BallSpeedUp = 5,
+            BallSpeedDown = 6,
+            PaddleSpeedUp = 7,
+            PaddleSpeedDown = 8,
+            StickyPaddle = 9,
+            PaddleGun = 10
         }
+
+        public static readonly int NumberOfPowerUps = 11;
 
         protected PowerUpType type;
         protected GameplayManager gm;

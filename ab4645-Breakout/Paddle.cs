@@ -25,6 +25,8 @@ namespace ab4645_Breakout
         Vector2 startPos;
 
         protected float movementImpulse = 2.0f;
+        protected float movementImpulseMin = 0.5f;
+        protected float movementImpulseMax = 4.0f;
 
         public PlayerIndex PlayerIndex { get { return playerIndex; } }
 
@@ -90,7 +92,25 @@ namespace ab4645_Breakout
             }
         }
 
+        public void SpeedUp() {
+            movementImpulse = MathHelper.Clamp(movementImpulse * 1.33f, movementImpulseMin, movementImpulseMax);
+        }
+
+        public void SpeedDown() {
+            movementImpulse = MathHelper.Clamp(movementImpulse * 0.75f, movementImpulseMin, movementImpulseMax);
+        }
+
         public void SizeUp() {
+            Resize(1.25f);
+        }
+
+        public void SizeDown()
+        {
+            Resize(0.8f);
+        }
+
+        private void Resize(float scaleFactor) {
+            width *= scaleFactor;
             List<Ball> tmpBalls = new List<Ball>();
             while (ballAttachments.Count > 0)
             {
@@ -101,7 +121,7 @@ namespace ab4645_Breakout
 
             world.RemoveJoint(joint);
 
-            width *= 1.25f;
+            
             Vector2 pos = body.Position;
             Vector2 linearVel = body.LinearVelocity;
             float mass = body.Mass;
@@ -116,17 +136,19 @@ namespace ab4645_Breakout
             body.Mass = mass;
             body.LinearVelocity = linearVel;
 
-            
+
 
             joint = JointFactory.CreatePrismaticJoint(world, ground, body, startPos, new Vector2(1, 0), true);
-            joint.LowerLimit = -maxTranslation + width/2.0f + (startPos.X - pos.X);
-            joint.UpperLimit = maxTranslation - width/2.0f + (startPos.X - pos.X);
+            joint.LowerLimit = -maxTranslation + width / 2.0f + (startPos.X - pos.X);
+            joint.UpperLimit = maxTranslation - width / 2.0f + (startPos.X - pos.X);
             joint.LimitEnabled = true;
             body.LinearDamping = 5.0f;
 
             foreach (Ball b in tmpBalls)
                 Attach(b);
         }
+
+        
 
         public override void Update(GameTime gameTime)
         {
