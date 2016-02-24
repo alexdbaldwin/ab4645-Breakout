@@ -36,6 +36,10 @@ namespace ab4645_Breakout
             }
         }
 
+        public int Balls {
+            get { return balls; }
+        }
+
         public Paddle Paddle {
             get {
                 return paddle;

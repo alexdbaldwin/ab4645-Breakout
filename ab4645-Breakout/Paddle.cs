@@ -14,14 +14,19 @@ namespace ab4645_Breakout
 {
     class Paddle : GameObject
     {
-        protected float width;
+        public float width;
         protected float height;
 
         protected float speed = 10.0f;
         protected PrismaticJoint joint;
         protected PlayerIndex playerIndex;
+        Body ground;
+        float maxTranslation;
+        Vector2 startPos;
 
         protected float movementImpulse = 2.0f;
+
+        public PlayerIndex PlayerIndex { get { return playerIndex; } }
 
 
         protected List<WeldJoint> ballAttachments = new List<WeldJoint>();
@@ -31,23 +36,23 @@ namespace ab4645_Breakout
             this.playerIndex = playerIndex;
             this.width = width;
             this.height = height;
+            this.maxTranslation = maxTranslation;
+            startPos = new Vector2(position.X,position.Y) ;
 
             body = BodyFactory.CreateRectangle(world, width, height, 1, position);
             body.BodyType = BodyType.Dynamic;
-            body.CollidesWith = Category.Cat1;
-          
-           
-            body.CollisionCategories = Category.All;
+            body.CollidesWith = Category.Cat1 | Category.Cat3;
+            body.CollisionCategories = Category.Cat2;
             body.Restitution = 1.0f;
             body.Friction = 0.0f;
             body.UserData = this;
 
-            Body ground = BodyFactory.CreateRectangle(world, 1, 1, 1);
+            ground = BodyFactory.CreateRectangle(world, 1, 1, 1);
 
 
             joint = JointFactory.CreatePrismaticJoint(world, ground, body, position, new Vector2(1, 0),true);
-            joint.LowerLimit = -maxTranslation;
-            joint.UpperLimit = maxTranslation;
+            joint.LowerLimit = -maxTranslation + width / 2.0f;
+            joint.UpperLimit = maxTranslation - width / 2.0f;
             joint.LimitEnabled = true;
             body.LinearDamping = 5.0f;
         }
@@ -65,8 +70,8 @@ namespace ab4645_Breakout
             }
             float distanceSoFar = 0;
             for (int i = 0; i < ballAttachments.Count; i++) {
-                ballAttachments[i].LocalAnchorB = new Vector2(distanceSoFar - diameterSum/2.0f, height / 2.0f + b.Radius);
-                ballAttachments[i].BodyB.Position = body.Position - new Vector2(distanceSoFar - diameterSum / 2.0f, height / 2.0f + b.Radius);
+                ballAttachments[i].LocalAnchorB = new Vector2(distanceSoFar - diameterSum/2.0f + (ballAttachments[i].BodyB.UserData as Ball).Radius, height / 2.0f + (ballAttachments[i].BodyB.UserData as Ball).Radius);
+                ballAttachments[i].BodyB.Position = body.Position - new Vector2(distanceSoFar - diameterSum / 2.0f, height / 2.0f + (ballAttachments[i].BodyB.UserData as Ball).Radius);
                 distanceSoFar += (ballAttachments[i].BodyB.UserData as Ball).Radius * 2;
             }
             //world.RemoveJoint
@@ -75,10 +80,52 @@ namespace ab4645_Breakout
 
         private void LaunchBalls() {
             while (ballAttachments.Count > 0) {
-                (ballAttachments[0].BodyB.UserData as Ball).Launch(new Vector2(0, -1));
+                //Calculate launch angle...
+                float launchAngle = MathHelper.Lerp(-3 * MathHelper.PiOver4, -MathHelper.PiOver4, ((ballAttachments[0].BodyB.UserData as Ball).Position.X - (body.Position.X - width / 2.0f)) / width);
+                Vector2 launchVector = new Vector2((float)Math.Cos(launchAngle), (float)Math.Sin(launchAngle));
+
+                (ballAttachments[0].BodyB.UserData as Ball).Launch(launchVector);
                 world.RemoveJoint(ballAttachments[0]);
                 ballAttachments.RemoveAt(0);
             }
+        }
+
+        public void SizeUp() {
+            List<Ball> tmpBalls = new List<Ball>();
+            while (ballAttachments.Count > 0)
+            {
+                tmpBalls.Add(ballAttachments[0].BodyB.UserData as Ball);
+                world.RemoveJoint(ballAttachments[0]);
+                ballAttachments.RemoveAt(0);
+            }
+
+            world.RemoveJoint(joint);
+
+            width *= 1.25f;
+            Vector2 pos = body.Position;
+            Vector2 linearVel = body.LinearVelocity;
+            float mass = body.Mass;
+            world.RemoveBody(body);
+            body = BodyFactory.CreateRectangle(world, width, height, 1, pos);
+            body.BodyType = BodyType.Dynamic;
+            body.CollidesWith = Category.Cat1 | Category.Cat3;
+            body.CollisionCategories = Category.Cat2;
+            body.Restitution = 1.0f;
+            body.Friction = 0.0f;
+            body.UserData = this;
+            body.Mass = mass;
+            body.LinearVelocity = linearVel;
+
+            
+
+            joint = JointFactory.CreatePrismaticJoint(world, ground, body, startPos, new Vector2(1, 0), true);
+            joint.LowerLimit = -maxTranslation + width/2.0f + (startPos.X - pos.X);
+            joint.UpperLimit = maxTranslation - width/2.0f + (startPos.X - pos.X);
+            joint.LimitEnabled = true;
+            body.LinearDamping = 5.0f;
+
+            foreach (Ball b in tmpBalls)
+                Attach(b);
         }
 
         public override void Update(GameTime gameTime)

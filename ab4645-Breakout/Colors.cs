@@ -22,6 +22,8 @@ namespace ab4645_Breakout
                     return new Color(149, 73, 255, 255);
                 case Block.BlockType.FiveHits:
                     return new Color(73, 255, 164, 255);
+                case Block.BlockType.Indestructible:
+                    return new Color(20, 20, 20, 255);
                 default:
                     return Color.Black;
             }
@@ -41,6 +43,8 @@ namespace ab4645_Breakout
                     return new Color(191, 145, 255, 255);
                 case Block.BlockType.FiveHits:
                     return new Color(130, 255, 192, 255);
+                case Block.BlockType.Indestructible:
+                    return new Color(40, 40, 40, 255);
                 default:
                     return Color.Black;
             }
@@ -60,6 +64,8 @@ namespace ab4645_Breakout
                     return new Color(225, 204, 255, 255);
                 case Block.BlockType.FiveHits:
                     return new Color(216, 255, 235, 255);
+                case Block.BlockType.Indestructible:
+                    return new Color(30, 30, 30, 255);
                 default:
                     return Color.Black;
             }
@@ -79,6 +85,8 @@ namespace ab4645_Breakout
                     return new Color(88, 65, 119, 255);
                 case Block.BlockType.FiveHits:
                     return new Color(56, 99, 78, 255);
+                case Block.BlockType.Indestructible:
+                    return new Color(10, 10, 10, 255);
                 default:
                     return Color.Black;
             }
@@ -98,8 +106,36 @@ namespace ab4645_Breakout
                     return new Color(124, 92, 168, 255);
                 case Block.BlockType.FiveHits:
                     return new Color(88, 155, 122, 255);
+                case Block.BlockType.Indestructible:
+                    return new Color(0, 0, 0, 255);
                 default:
                     return Color.Black;
+            }
+        }
+
+        public static Color PowerUpOne(PowerUp.PowerUpType type) {
+            switch (type)
+            {
+                default:
+                    return Color.LightYellow;
+            }
+        }
+
+        public static Color PowerUpTwo(PowerUp.PowerUpType type)
+        {
+            switch (type)
+            {
+                default:
+                    return Color.Yellow;
+            }
+        }
+
+        public static Color PowerUpThree(PowerUp.PowerUpType type)
+        {
+            switch (type)
+            {
+                default:
+                    return Color.LightGoldenrodYellow;
             }
         }
     }

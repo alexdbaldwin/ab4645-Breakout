@@ -1,5 +1,6 @@
 ﻿using FarseerPhysics;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,7 @@ namespace ab4645_Breakout
         protected float speed = 10.0f;
         protected ParticleEmitter trail;
         protected Vector2 oldLinearVelocity = Vector2.Zero;
+        public bool justCollided = false;
 
         public Player Owner {
             get { return player; }
@@ -51,6 +53,7 @@ namespace ab4645_Breakout
             body.CollisionCategories = Category.Cat1;
             body.Restitution = 1.0f;
             body.Friction = 0.0f;
+            body.OnCollision += OnCollision;
 
             //body.ApplyLinearImpulse(new Vector2(-0.2f, -1f)*0.8f);
             body.UserData = this;
@@ -58,25 +61,126 @@ namespace ab4645_Breakout
             //body.LinearVelocity = Vector2.Normalize(new Vector2(-1f, -1f))*10f;
         }
 
+        public bool OnCollision(Fixture a, Fixture b, Contact c)
+        {
+
+            if (a.Body.UserData == this)
+            {
+                if (!(b.Body.UserData is Paddle) && !(b.Body.UserData is Ball))
+                    justCollided = true;
+                if(b.Body.UserData is Paddle)
+                {
+                    Paddle p = b.Body.UserData as Paddle;
+                    float shuntAmount = MathHelper.Lerp(-3 * MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((a.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
+                    Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
+
+                    float shuntStrength = 0.002f;
+                    body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                }
+            }
+            else if (b.Body.UserData == this)
+            {
+                if (!(a.Body.UserData is Paddle) && !(a.Body.UserData is Ball))
+                    justCollided = true;
+                if (a.Body.UserData is Paddle)
+                {
+                    Paddle p = a.Body.UserData as Paddle;
+                    float shuntAmount = MathHelper.Lerp(-3*MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((b.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
+                    Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
+
+                    float shuntStrength = 0.002f;
+                    body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                }
+            }
+            return true;
+        }
+
         public void Launch(Vector2 direction) {
             body.LinearVelocity = Vector2.Normalize(direction) * speed;
         }
+
+        private bool NearlyVertical(Vector2 v) {
+            if (1.0f - Math.Abs(Vector2.Dot(Vector2.Normalize(v), new Vector2(0, 1))) < 0.001f)
+                return true;
+            return false;
+        }
+
+        private bool NearlyHorizontal(Vector2 v)
+        {
+            if (1.0f - Math.Abs(Vector2.Dot(Vector2.Normalize(v), new Vector2(1, 0))) < 0.001f)
+                return true;
+            return false;
+        }
+
 
         public override void Update(GameTime gameTime)
         {
             if (body.LinearVelocity.Length() > 0.001f)
             {
+
                 body.LinearVelocity = Vector2.Normalize(body.LinearVelocity) * speed;
                 oldLinearVelocity = body.LinearVelocity;
-            }  
-            else if(oldLinearVelocity != Vector2.Zero){
+
+            }
+            else if (oldLinearVelocity != Vector2.Zero)
+            {
                 body.LinearVelocity = Vector2.Normalize(-oldLinearVelocity) * speed;
             }
+
+
+            ResolveVerticalAndHorizontalVelocities();
+
             if (body.Position.Y > maxY)
                 Destroy();
 
+            
+
             trail.Update(gameTime);
             trail.Position = ConvertUnits.ToDisplayUnits(body.Position);
+            justCollided = false;
+        }
+
+        private void ResolveVerticalAndHorizontalVelocities()
+        {
+            if (justCollided)
+            {
+                if (NearlyHorizontal(body.LinearVelocity))
+                {
+                    if (body.LinearVelocity.X < 0)
+                    {
+                        float launchAngle = -5 * MathHelper.PiOver4 + (float)Game1.rand.NextDouble() * MathHelper.PiOver4;
+                        Vector2 launchVector = new Vector2((float)Math.Cos(launchAngle), (float)Math.Sin(launchAngle));
+
+                        body.LinearVelocity = Vector2.Normalize(launchVector) * speed;
+                        oldLinearVelocity = body.LinearVelocity;
+                    }
+                    else {
+                        float launchAngle = -MathHelper.PiOver4 + (float)Game1.rand.NextDouble() * MathHelper.PiOver4;
+                        Vector2 launchVector = new Vector2((float)Math.Cos(launchAngle), (float)Math.Sin(launchAngle));
+
+                        body.LinearVelocity = Vector2.Normalize(launchVector) * speed;
+                        oldLinearVelocity = body.LinearVelocity;
+                    }
+                }
+                else if (NearlyVertical(body.LinearVelocity)) {
+                    if (body.LinearVelocity.Y < 0)
+                    {
+                        float launchAngle = -3 * MathHelper.PiOver4 + (float)Game1.rand.NextDouble() * MathHelper.PiOver4;
+                        Vector2 launchVector = new Vector2((float)Math.Cos(launchAngle), (float)Math.Sin(launchAngle));
+
+                        body.LinearVelocity = Vector2.Normalize(launchVector) * speed;
+                        oldLinearVelocity = body.LinearVelocity;
+                    }
+                    else {
+                        float launchAngle = MathHelper.PiOver4 + (float)Game1.rand.NextDouble() * MathHelper.PiOver4;
+                        Vector2 launchVector = new Vector2((float)Math.Cos(launchAngle), (float)Math.Sin(launchAngle));
+
+                        body.LinearVelocity = Vector2.Normalize(launchVector) * speed;
+                        oldLinearVelocity = body.LinearVelocity;
+                    }
+                    
+                }
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

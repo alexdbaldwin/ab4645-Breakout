@@ -1,9 +1,11 @@
-﻿using FarseerPhysics;
+﻿using ab4645_Breakout.PowerUps;
+using FarseerPhysics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +26,11 @@ namespace ab4645_Breakout
         Color bgFrom, bgTo;
         float bgLerpTime = 0.0f;
         float bgLerpLength = 0.5f;
+        SpriteFont mainFont;
+        int blocksRemaining = 0;
+
+        string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level2.txt", "Content/Levels/level3.txt" };
+        int levelIndex = 0;
 
         GameState currentGameState = GameState.Playing;
 
@@ -55,13 +62,12 @@ namespace ab4645_Breakout
             tileWidth = (screenWidth - 2 * sideMargin) / (float)tilesX;
             tileHeight = (screenHeight - bottomMargin) / (float)tilesY;
 
-            LoadLevel(contentRoot + "/Levels/level1.txt");
+            //bgFrom = new Color(Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), 255);
+            //bgTo = new Color(Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), 255);
 
-            JoinGame(PlayerIndex.One);
-            //JoinGame(PlayerIndex.Two);
+            mainFont = AssetManager.GetFont("main");
 
-            bgFrom = new Color(Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), 255);
-            bgTo = new Color(Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), Game1.rand.Next(0, 256), 255);
+            RestartGame(PlayerIndex.One);
 
         }
 
@@ -87,7 +93,7 @@ namespace ab4645_Breakout
                 case PlayerIndex.One:
                     if (player1 == null)
                     {
-                        Paddle paddle1 = new Paddle(PlayerIndex.One, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin - 75.0f), world);
+                        Paddle paddle1 = new Paddle(PlayerIndex.One, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
                         gameObjects.Add(paddle1);
                         player1 = new Player(this, paddle1, PlayerIndex.One);
                         SpawnBall(player1);
@@ -101,10 +107,11 @@ namespace ab4645_Breakout
                 case PlayerIndex.Two:
                     if (player2 == null)
                     {
-                        Paddle paddle2 = new Paddle(PlayerIndex.Two, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin - 75.0f), world);
+                        Paddle paddle2 = new Paddle(PlayerIndex.Two, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
                         gameObjects.Add(paddle2);
                         player2 = new Player(this, paddle2, PlayerIndex.Two);
                         SpawnBall(player2);
+
                         //gameObjects.Add(new Ball(player2, ConvertUnits.ToSimUnits(new Vector2(screenWidth / 2.0f, screenHeight - 400.0f)), ConvertUnits.ToSimUnits(10.0f), world));
                     }
                     else {
@@ -150,20 +157,96 @@ namespace ab4645_Breakout
                 gameObjects[i].Update(gameTime);
                 if (gameObjects[i].Dead)
                 {
-                    if (gameObjects[i] is Ball) {
+                    if (gameObjects[i] is Ball)
+                    {
                         (gameObjects[i] as Ball).Owner.RemoveBall();
+                    }
+                    if (gameObjects[i] is Block) {
+                        blocksRemaining--;
+                        gameObjects.Add(new PaddleSizeUp(this, world, gameObjects[i].Position));
                     }
                     gameObjects[i].CleanUp();
                     gameObjects.RemoveAt(i--);
                 }
             }
 
+            if (blocksRemaining <= 0 && levelIndex < levels.Length - 1) {
+                NextLevel();
+            }
+
+            if (player1 != null && !player1.Alive)
+            {
+                player1.Paddle.CleanUp();
+                gameObjects.Remove(player1.Paddle);
+                player1 = null;
+            }
+            if (player2 != null && !player2.Alive)
+            {
+                player2.Paddle.CleanUp();
+                gameObjects.Remove(player2.Paddle);
+                player2 = null;
+            }
+
             if (!APlayerIsAlive())
-                currentGameState = GameState.GameOver;
+            {
+                GameOver();
+            }
+
+            DropInPlayer2();
+
+        }
+
+        private void DropInPlayer2()
+        {
+            if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Start) && player1 == null)
+            {
+                JoinGame(PlayerIndex.One);
+            }
+            else if (InputHandler.IsButtonDown(PlayerIndex.Two, PlayerInput.Start) && player2 == null)
+            {
+                JoinGame(PlayerIndex.Two);
+            }
+        }
+
+        private void GameOver() {
+            currentGameState = GameState.GameOver;
+        }
+
+        private void NextLevel(){
+            levelIndex++;
+            
+            for (int i = 0; i < gameObjects.Count; i++){
+                if (gameObjects[i] is Ball) {
+                    (gameObjects[i] as Ball).Owner.Paddle.Attach(gameObjects[i] as Ball);
+                }
+                if (gameObjects[i] is Block || gameObjects[i] is PowerUp) {
+                    gameObjects[i].CleanUp();
+                    gameObjects.RemoveAt(i--);
+                }
+
+            }
+
+            LoadLevel(levels[levelIndex]);
+            currentGameState = GameState.Playing;
         }
 
         private void UpdateGameOver(GameTime gameTime) {
-            //Don't do anything yet
+            if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Start)) {
+                RestartGame(PlayerIndex.One);
+            } else if (InputHandler.IsButtonDown(PlayerIndex.Two, PlayerInput.Start))
+            {
+                RestartGame(PlayerIndex.Two);
+            }
+        }
+
+        private void RestartGame(PlayerIndex player) {
+            levelIndex = 0;
+            player1 = null;
+            player2 = null;
+            ClearGameObjects();
+            LoadLevel("Content/Levels/level1.txt");
+            JoinGame(player);
+            currentGameState = GameState.Playing;
         }
 
         private bool APlayerIsAlive() {
@@ -192,6 +275,13 @@ namespace ab4645_Breakout
                 case GameState.Playing:
                     break;
                 case GameState.GameOver:
+                    string gameOver = "GAME OVER";
+                    string retry = "Press start to retry";
+                    Vector2 gameOverSize = mainFont.MeasureString(gameOver);
+                    Vector2 retrySize = mainFont.MeasureString(retry);
+                    float verticalSpacing = 10.0f;
+                    spriteBatch.DrawString(mainFont, gameOver, new Vector2(screenWidth / 2.0f - gameOverSize.X / 2.0f, screenHeight / 2.0f - (gameOverSize.Y + retrySize.Y + verticalSpacing) / 2.0f), Color.White);
+                    spriteBatch.DrawString(mainFont, retry, new Vector2(screenWidth / 2.0f - retrySize.X / 2.0f, screenHeight / 2.0f - (gameOverSize.Y + retrySize.Y + verticalSpacing) / 2.0f + gameOverSize.Y + verticalSpacing), Color.White);
                     break;
                 default:
                     break;
@@ -199,7 +289,27 @@ namespace ab4645_Breakout
             
         }
 
+        private void ClearGameObjects() {
+            foreach(GameObject go in gameObjects)
+                go.CleanUp();
+            gameObjects.Clear();
+        }
+
+        public Player GetPlayer(PlayerIndex playerIndex) {
+            switch (playerIndex)
+            {
+                case PlayerIndex.One:
+                    return player1;
+                case PlayerIndex.Two:
+                    return player2;
+                default:
+                    return null;
+            }
+        }
+
         private void LoadLevel(string path) {
+            
+            blocksRemaining = 0;
             using (StreamReader sr = new StreamReader(path)) {
                 int j = 0;
                 while (!sr.EndOfStream) {
@@ -208,18 +318,27 @@ namespace ab4645_Breakout
                         switch (line[i]) {
                             case '1':
                                 gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f)*tileWidth, (j+0.5f)*tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Teal, 1, Block.BlockType.OneHit));
+                                blocksRemaining++;
                                 break;
                             case '2':
                                 gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f) * tileWidth, (j + 0.5f) * tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Yellow, 2, Block.BlockType.TwoHits));
+                                blocksRemaining++;
                                 break;
                             case '3':
                                 gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f) * tileWidth, (j + 0.5f) * tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Violet, 3, Block.BlockType.ThreeHits));
+                                blocksRemaining++;
                                 break;
                             case '4':
                                 gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f) * tileWidth, (j + 0.5f) * tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Cyan, 4, Block.BlockType.FourHits));
+                                blocksRemaining++;
                                 break;
                             case '5':
                                 gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f) * tileWidth, (j + 0.5f) * tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Orange, 5, Block.BlockType.FiveHits));
+                                blocksRemaining++;
+                                break;
+                            case '0':
+                                gameObjects.Add(new Block(ConvertUnits.ToSimUnits(new Vector2(sideMargin + (i + 0.5f) * tileWidth, (j + 0.5f) * tileHeight)), ConvertUnits.ToSimUnits(tileWidth), ConvertUnits.ToSimUnits(tileHeight), world, Color.Orange, -1, Block.BlockType.Indestructible));
+                               // blocksRemaining++;
                                 break;
                             case '-':
                                 break;

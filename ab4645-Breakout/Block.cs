@@ -19,7 +19,8 @@ namespace ab4645_Breakout
             TwoHits,
             ThreeHits,
             FourHits,
-            FiveHits
+            FiveHits,
+            Indestructible
         }
 
         protected float width;
@@ -38,8 +39,8 @@ namespace ab4645_Breakout
 
             body = BodyFactory.CreateRectangle(world, width, height, 1, position);
             body.BodyType = BodyType.Static;
-            body.CollidesWith = Category.All;
-            body.CollisionCategories = Category.All;
+            body.CollidesWith = Category.Cat1;
+            body.CollisionCategories = Category.Cat4;
             body.Restitution = 1.0f;
             body.Friction = 0.0f;
             body.OnCollision += OnCollision;
@@ -49,6 +50,8 @@ namespace ab4645_Breakout
         }
 
         public void Damage(int amount = 1) {
+            if (HP < 0)
+                return;
             HP -= amount;
             if (HP <= 0)
                 Destroy();
