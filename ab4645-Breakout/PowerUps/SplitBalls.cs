@@ -7,16 +7,16 @@ using System.Text;
 
 namespace ab4645_Breakout.PowerUps
 {
-    class PaddleSpeedUp : PowerUp
+    class SplitBalls : PowerUp
     {
-        public PaddleSpeedUp(GameplayManager gm, World world, Vector2 position)
-            : base(gm, world, position, PowerUpType.PaddleSpeedUp)
+        public SplitBalls(GameplayManager gm, World world, Vector2 position)
+            : base(gm, world, position, PowerUpType.SplitBalls)
         {
         }
 
         public override void Apply(PlayerIndex player)
         {
-            gm.GetPlayer(player).Paddle.SpeedUp();
+            gm.SplitBalls(gm.GetPlayer(player));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FarseerPhysics;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
@@ -30,7 +31,7 @@ namespace ab4645_Breakout
 
         public Ball(Player player, Vector2 position, float radius, float maxY, World world) : base(world) {
             this.player = player;
-            this.radius = radius;
+            this.radius = ConvertUnits.ToSimUnits(player.BallRadius);
             this.maxY = maxY;
 
             switch (player.Index)
@@ -49,7 +50,7 @@ namespace ab4645_Breakout
 
             body = BodyFactory.CreateCircle(world, radius, 1, position);
             body.BodyType = BodyType.Dynamic;
-            body.CollidesWith = Category.All;
+            body.CollidesWith = Category.Cat2 | Category.Cat4;
             body.CollisionCategories = Category.Cat1;
             body.Restitution = 1.0f;
             body.Friction = 0.0f;
@@ -58,6 +59,7 @@ namespace ab4645_Breakout
             //body.ApplyLinearImpulse(new Vector2(-0.2f, -1f)*0.8f);
             body.UserData = this;
 
+            speed = Owner.BallSpeed;
             //body.LinearVelocity = Vector2.Normalize(new Vector2(-1f, -1f))*10f;
         }
 
@@ -71,11 +73,19 @@ namespace ab4645_Breakout
                 if(b.Body.UserData is Paddle)
                 {
                     Paddle p = b.Body.UserData as Paddle;
-                    float shuntAmount = MathHelper.Lerp(-3 * MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((a.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
-                    Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
 
-                    float shuntStrength = 0.002f;
-                    body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                    if (p.Sticky)
+                    {
+                        p.Attach(this);
+                    } else
+                    {
+                        float shuntAmount = MathHelper.Lerp(-3 * MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((a.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
+                        Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
+
+                        float shuntStrength = 0.002f;
+                        body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                    }
+                    
                 }
             }
             else if (b.Body.UserData == this)
@@ -85,14 +95,30 @@ namespace ab4645_Breakout
                 if (a.Body.UserData is Paddle)
                 {
                     Paddle p = a.Body.UserData as Paddle;
-                    float shuntAmount = MathHelper.Lerp(-3*MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((b.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
-                    Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
+                    if (p.Sticky)
+                    {
+                        p.Attach(this);
+                    }
+                    else
+                    {
+                        float shuntAmount = MathHelper.Lerp(-3 * MathHelper.PiOver4, -MathHelper.PiOver4, (0.5f + ((b.Body.UserData as Ball).Position.X - p.Body.Position.X) / p.width));
+                        Vector2 shuntVector = new Vector2((float)Math.Cos(shuntAmount), (float)Math.Sin(shuntAmount));
 
-                    float shuntStrength = 0.002f;
-                    body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                        float shuntStrength = 0.002f;
+                        body.ApplyLinearImpulse(shuntVector * shuntStrength);
+                    }
                 }
             }
             return true;
+        }
+
+        public void UpdateSpeed(float speed) {
+            this.speed = speed;
+        }
+
+        public void UpdateRadius(float radius) {
+            this.radius = ConvertUnits.ToSimUnits(radius);
+            (body.FixtureList[0].Shape as CircleShape).Radius = this.radius;
         }
 
         public void Launch(Vector2 direction) {

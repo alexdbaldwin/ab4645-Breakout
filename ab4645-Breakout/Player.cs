@@ -14,6 +14,11 @@ namespace ab4645_Breakout
         protected PlayerIndex playerIndex;
         protected GameplayManager gm;
         protected Paddle paddle;
+        protected float ballSpeed = 12.5f;
+        protected float ballRadius = 10.0f;
+
+        public float BallSpeed { get { return ballSpeed; } set { ballSpeed = value; } }
+        public float BallRadius { get { return ballRadius; } set { ballRadius = value; } }
 
         public Color BallColor {
             get
@@ -71,6 +76,9 @@ namespace ab4645_Breakout
             balls++;
         }
 
+        public void AddLife() {
+            lives++;
+        }
 
     }
 }

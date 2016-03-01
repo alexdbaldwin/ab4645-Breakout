@@ -3,4 +3,4 @@
 Cat1 = balls
 Cat2 = paddle
 Cat3 = powerups
-Cat4 = blockss
+Cat4 = blocks

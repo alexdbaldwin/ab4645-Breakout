@@ -23,12 +23,13 @@ namespace ab4645_Breakout
         Body ground;
         float maxTranslation;
         Vector2 startPos;
-
+        bool sticky = false;
         protected float movementImpulse = 2.0f;
         protected float movementImpulseMin = 0.5f;
         protected float movementImpulseMax = 4.0f;
 
         public PlayerIndex PlayerIndex { get { return playerIndex; } }
+        public bool Sticky { get { return sticky; } }
 
 
         protected List<WeldJoint> ballAttachments = new List<WeldJoint>();
@@ -90,6 +91,10 @@ namespace ab4645_Breakout
                 world.RemoveJoint(ballAttachments[0]);
                 ballAttachments.RemoveAt(0);
             }
+        }
+
+        public void MakeSticky() {
+            sticky = !sticky;
         }
 
         public void SpeedUp() {

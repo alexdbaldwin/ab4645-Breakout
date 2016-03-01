@@ -19,16 +19,17 @@ namespace ab4645_Breakout
             PaddleSizeDown = 1,
             BallSizeUp = 2,
             BallSizeDown = 3,
-            MultiBall = 4,
+            SplitBalls = 4,
             BallSpeedUp = 5,
             BallSpeedDown = 6,
             PaddleSpeedUp = 7,
             PaddleSpeedDown = 8,
             StickyPaddle = 9,
-            PaddleGun = 10
+            ExtraBall = 10,
+            ExtraLife = 11
         }
 
-        public static readonly int NumberOfPowerUps = 11;
+        public static readonly int NumberOfPowerUps = 12;
 
         protected PowerUpType type;
         protected GameplayManager gm;

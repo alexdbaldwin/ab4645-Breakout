@@ -28,7 +28,7 @@ namespace ab4645_Breakout
         float bgLerpLength = 0.5f;
         SpriteFont mainFont;
         int blocksRemaining = 0;
-        float powerUpSpawnChance = 0.1f;
+        float powerUpSpawnChance = 0.15f;
 
         string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level2.txt", "Content/Levels/level3.txt" };
         int levelIndex = 0;
@@ -152,39 +152,48 @@ namespace ab4645_Breakout
         }
 
         private void SpawnRandomPowerUp(Vector2 position) {
-            gameObjects.Add(new PaddleSpeedDown(this, world, position));
-            //PowerUp.PowerUpType type = (PowerUp.PowerUpType)Game1.rand.Next(11);
-            //switch (type)
-            //{
-            //    case PowerUp.PowerUpType.PaddleSizeUp:
-            //        gameObjects.Add(new PaddleSizeUp(this, world, position));
-            //        break;
-            //    case PowerUp.PowerUpType.PaddleSizeDown:
-            //        gameObjects.Add(new PaddleSizeDown(this, world, position));
-            //        break;
-            //    case PowerUp.PowerUpType.BallSizeUp:
-            //        break;
-            //    case PowerUp.PowerUpType.BallSizeDown:
-            //        break;
-            //    case PowerUp.PowerUpType.MultiBall:
-            //        break;
-            //    case PowerUp.PowerUpType.BallSpeedUp:
-            //        break;
-            //    case PowerUp.PowerUpType.BallSpeedDown:
-            //        break;
-            //    case PowerUp.PowerUpType.PaddleSpeedUp:
-            //        gameObjects.Add(new PaddleSpeedUp(this, world, position));
-            //        break;
-            //    case PowerUp.PowerUpType.PaddleSpeedDown:
-            //        gameObjects.Add(new PaddleSpeedDown(this, world, position));
-            //        break;
-            //    case PowerUp.PowerUpType.StickyPaddle:
-            //        break;
-            //    case PowerUp.PowerUpType.PaddleGun:
-            //        break;
-            //    default:
-            //        break;
-            //}
+            PowerUp.PowerUpType type = (PowerUp.PowerUpType)Game1.rand.Next(PowerUp.NumberOfPowerUps);
+            switch (type)
+            {
+                case PowerUp.PowerUpType.PaddleSizeUp:
+                    gameObjects.Add(new PaddleSizeUp(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.PaddleSizeDown:
+                    gameObjects.Add(new PaddleSizeDown(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.BallSizeUp:
+                    gameObjects.Add(new BallSizeUp(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.BallSizeDown:
+                    gameObjects.Add(new BallSizeDown(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.SplitBalls:
+                    gameObjects.Add(new SplitBalls(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.BallSpeedUp:
+                    gameObjects.Add(new BallSpeedUp(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.BallSpeedDown:
+                    gameObjects.Add(new BallSpeedDown(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.PaddleSpeedUp:
+                    gameObjects.Add(new PaddleSpeedUp(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.PaddleSpeedDown:
+                    gameObjects.Add(new PaddleSpeedDown(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.StickyPaddle:
+                    gameObjects.Add(new StickyPaddle(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.ExtraBall:
+                    gameObjects.Add(new ExtraBall(this, world, position));
+                    break;
+                case PowerUp.PowerUpType.ExtraLife:
+                    gameObjects.Add(new ExtraLife(this, world, position));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UpdatePlaying(GameTime gameTime)
@@ -300,6 +309,83 @@ namespace ab4645_Breakout
             Ball b = new Ball(player, ConvertUnits.ToSimUnits(new Vector2(screenWidth / 2.0f, screenHeight - 400.0f)), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
             gameObjects.Add(b);
             player.Paddle.Attach(b);
+        }
+
+        public void SplitBalls(Player player)
+        {
+            for(int i = gameObjects.Count - 1; i >= 0; i--)
+            {
+                if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player) {
+                    
+
+                    float angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
+                    Vector2 heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                    (gameObjects[i] as Ball).Launch(heading);
+
+                    angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
+                    heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+
+                    player.AddBall();
+                    Ball b = new Ball(player, gameObjects[i].Position + new Vector2(0, 0.001f), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
+                    gameObjects.Add(b);
+                    b.Launch(heading);
+
+                    angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
+                    heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+
+                    player.AddBall();
+                    b = new Ball(player, gameObjects[i].Position - new Vector2(0, 0.001f), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
+                    gameObjects.Add(b);
+                    b.Launch(heading);
+                }
+            }
+        }
+
+        public void SpeedUpBalls(Player player) {
+            player.BallSpeed = MathHelper.Clamp(player.BallSpeed * 1.25f, 5.0f, 30.0f);
+            for (int i = gameObjects.Count - 1; i >= 0; i--)
+            {
+                if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player)
+                {
+                    (gameObjects[i] as Ball).UpdateSpeed(player.BallSpeed);
+                }
+            }
+        }
+
+        public void SlowDownBalls(Player player)
+        {
+            player.BallSpeed = MathHelper.Clamp(player.BallSpeed * 0.75f, 5.0f, 30.0f);
+            for (int i = gameObjects.Count - 1; i >= 0; i--)
+            {
+                if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player)
+                {
+                    (gameObjects[i] as Ball).UpdateSpeed(player.BallSpeed);
+                }
+            }
+        }
+
+        public void EnlargeBalls(Player player)
+        {
+            player.BallRadius = MathHelper.Clamp(player.BallRadius * 1.25f, 3f, 30.0f);
+            for (int i = gameObjects.Count - 1; i >= 0; i--)
+            {
+                if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player)
+                {
+                    (gameObjects[i] as Ball).UpdateRadius(player.BallRadius);
+                }
+            }
+        }
+
+        public void ShrinkBalls(Player player)
+        {
+            player.BallRadius = MathHelper.Clamp(player.BallRadius * 0.75f, 3.0f, 30.0f);
+            for (int i = gameObjects.Count - 1; i >= 0; i--)
+            {
+                if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player)
+                {
+                    (gameObjects[i] as Ball).UpdateRadius(player.BallRadius);
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch) {
