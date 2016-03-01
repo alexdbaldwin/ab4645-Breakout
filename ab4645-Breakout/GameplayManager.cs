@@ -263,6 +263,7 @@ namespace ab4645_Breakout
 
         private void NextLevel(){
             levelIndex++;
+            levelIndex = levelIndex % levels.Length;
             
             for (int i = 0; i < gameObjects.Count; i++){
                 if (gameObjects[i] is Ball) {
