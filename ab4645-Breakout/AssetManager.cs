@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,8 @@ namespace ab4645_Breakout
 
         static Dictionary<string,Texture2D> textures = new Dictionary<string,Texture2D>();
         static Dictionary<string, SpriteFont> fonts = new Dictionary<string, SpriteFont>();
+        static Dictionary<string, Song> songs = new Dictionary<string, Song>();
+        static Dictionary<string, SoundEffect> sounds = new Dictionary<string, SoundEffect>();
 
         public static void AddTexture(string name, Texture2D texture) {
             textures.Add(name, texture);
@@ -27,6 +31,26 @@ namespace ab4645_Breakout
         {
             return fonts[name];
         }
+
+        public static void AddSong(string name, Song song)
+        {
+            songs.Add(name, song);
+        }
+        public static Song GetSong(string name)
+        {
+            return songs[name];
+        }
+
+        public static void AddSound(string name, SoundEffect sound)
+        {
+            sounds.Add(name, sound);
+        }
+        public static SoundEffect GetSound(string name)
+        {
+            return sounds[name];
+        }
+
+
 
     }
 }

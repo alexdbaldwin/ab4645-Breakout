@@ -30,7 +30,7 @@ namespace ab4645_Breakout
         int blocksRemaining = 0;
         float powerUpSpawnChance = 0.15f;
 
-        string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level2.txt", "Content/Levels/level3.txt" };
+        string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level4.txt", "Content/Levels/level3.txt", "Content/Levels/spiral.txt", "Content/Levels/rainbow.txt", "Content/Levels/fortress.txt" };
         int levelIndex = 0;
 
         GameState currentGameState = GameState.Playing;
@@ -69,6 +69,7 @@ namespace ab4645_Breakout
             mainFont = AssetManager.GetFont("main");
 
             RestartGame(PlayerIndex.One);
+            //JoinGame(PlayerIndex.Two);
 
         }
 
@@ -182,9 +183,9 @@ namespace ab4645_Breakout
                 case PowerUp.PowerUpType.PaddleSpeedDown:
                     gameObjects.Add(new PaddleSpeedDown(this, world, position));
                     break;
-                case PowerUp.PowerUpType.StickyPaddle:
-                    gameObjects.Add(new StickyPaddle(this, world, position));
-                    break;
+                //case PowerUp.PowerUpType.StickyPaddle:
+                //    gameObjects.Add(new StickyPaddle(this, world, position));
+                //    break;
                 case PowerUp.PowerUpType.ExtraBall:
                     gameObjects.Add(new ExtraBall(this, world, position));
                     break;
@@ -256,6 +257,7 @@ namespace ab4645_Breakout
         }
 
         private void GameOver() {
+            AudioManager.PlayDeath();
             currentGameState = GameState.GameOver;
         }
 
@@ -291,7 +293,7 @@ namespace ab4645_Breakout
             player1 = null;
             player2 = null;
             ClearGameObjects();
-            LoadLevel("Content/Levels/level1.txt");
+            LoadLevel(levels[levelIndex]);
             JoinGame(player);
             currentGameState = GameState.Playing;
         }
@@ -393,6 +395,23 @@ namespace ab4645_Breakout
             spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle((int)(screenWidth - sideMargin), 0, (int)sideMargin, (int)screenHeight), new Color(12, 12, 71, 255)/*Color.Lerp(bgFrom, bgTo, bgLerpTime / bgLerpLength)*/);
             foreach (GameObject go in gameObjects)
                 go.Draw(spriteBatch);
+
+            //Draw lives:
+            Texture2D heart = AssetManager.GetTexture("heart");
+            if (player1 != null) {
+                for (int i = 0; i < player1.Lives; i++) {
+                    spriteBatch.Draw(heart, new Vector2(sideMargin + i * (heart.Width + 10.0f) + 10.0f, screenHeight - heart.Height - 10.0f), Color.White);
+                }
+            }
+            Texture2D heart2 = AssetManager.GetTexture("heart_blue");
+            if (player2 != null)
+            {
+                for (int i = 0; i < player2.Lives; i++)
+                {
+                    spriteBatch.Draw(heart2, new Vector2(screenWidth - sideMargin - heart2.Width - i * (heart2.Width + 10.0f) - 10.0f, screenHeight - heart2.Height - 10.0f), Color.White);
+                }
+            }
+
 
             switch (currentGameState)
             {

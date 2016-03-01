@@ -35,6 +35,12 @@ namespace ab4645_Breakout
             }
         }
 
+        public int Lives {
+            get {
+                return lives;
+            }
+        }
+
         public bool Alive {
             get {
                 return lives > 0;

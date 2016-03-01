@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs" />
+    <Compile Include="AudioManager.cs" />
     <Compile Include="Ball.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Colors.cs" />
@@ -161,7 +162,7 @@
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleEmitter.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PowerUp.cs" />
+    <Compile Include="PowerUps\PowerUp.cs" />
     <Compile Include="PowerUps\BallSizeDown.cs" />
     <Compile Include="PowerUps\BallSizeUp.cs" />
     <Compile Include="PowerUps\BallSpeedDown.cs" />

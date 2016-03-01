@@ -116,3 +116,61 @@
 /processorParam:TextureFormat=Color
 /build:powerup.png
 
+#begin bounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:bounce.wav
+
+#begin death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:death.wav
+
+#begin 8bp079-05-random-spontaneous_devotion.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:8bp079-05-random-spontaneous_devotion.mp3
+
+#begin powerup_get.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:powerup_get.wav
+
+#begin heart.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:heart.png
+
+#begin heart_blue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:heart_blue.png
+
+#begin Levels/level4.txt
+/copy:Levels/level4.txt
+
+#begin Levels/rainbow.txt
+/copy:Levels/rainbow.txt
+
+#begin Levels/spiral.txt
+/copy:Levels/spiral.txt
+
+#begin Levels/fortress.txt
+/copy:Levels/fortress.txt
+

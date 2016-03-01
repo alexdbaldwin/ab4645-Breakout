@@ -65,6 +65,7 @@ namespace ab4645_Breakout
 
         public bool OnCollision(Fixture a, Fixture b, Contact c)
         {
+            AudioManager.PlayBounce();
 
             if (a.Body.UserData == this)
             {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 namespace ab4645_Breakout
@@ -60,8 +62,17 @@ namespace ab4645_Breakout
             AssetManager.AddTexture("softparticle", Content.Load<Texture2D>("softparticle"));
             AssetManager.AddTexture("powerup", Content.Load<Texture2D>("powerup"));
             AssetManager.AddTexture("level1bg", Content.Load<Texture2D>("level1bg"));
+            AssetManager.AddTexture("heart", Content.Load<Texture2D>("heart"));
+            AssetManager.AddTexture("heart_blue", Content.Load<Texture2D>("heart_blue"));
             AssetManager.AddFont("main", Content.Load<SpriteFont>("MainFont"));
+
+            AssetManager.AddSound("bounce", Content.Load<SoundEffect>("bounce"));
+            AssetManager.AddSound("death", Content.Load<SoundEffect>("death"));
+            AssetManager.AddSound("powerup", Content.Load<SoundEffect>("powerup_get"));
+            AssetManager.AddSong("track1", Content.Load<Song>("8bp079-05-random-spontaneous_devotion"));
             gm = new GameplayManager(Content.RootDirectory);
+
+            AudioManager.PlayMusic();
             
         }
 
