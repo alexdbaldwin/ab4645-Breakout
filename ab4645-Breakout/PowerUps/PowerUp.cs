@@ -36,6 +36,7 @@ namespace ab4645_Breakout
         bool apply = false;
         PlayerIndex applyToPlayer;
 
+
         public PowerUp(GameplayManager gm, World world, Vector2 position, PowerUpType type) : base(world)
         {
             this.gm = gm;

@@ -9,6 +9,7 @@ namespace ab4645_Breakout.PowerUps
 {
     class ExtraLife : PowerUp
     {
+
         public ExtraLife(GameplayManager gm, World world, Vector2 position)
             : base(gm, world, position, PowerUpType.ExtraLife)
         {

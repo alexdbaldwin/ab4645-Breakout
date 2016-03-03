@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace ab4645_Breakout
@@ -23,12 +24,17 @@ namespace ab4645_Breakout
             GameOver
         }
 
+
+
         Color bgFrom, bgTo;
         float bgLerpTime = 0.0f;
         float bgLerpLength = 0.5f;
         SpriteFont mainFont;
         int blocksRemaining = 0;
         float powerUpSpawnChance = 0.15f;
+
+        bool twoPlayers = false;
+        float player2WaitTime = 0.0f;
 
         string[] levels = new string[] { "Content/Levels/level1.txt", "Content/Levels/level4.txt", "Content/Levels/level3.txt", "Content/Levels/spiral.txt", "Content/Levels/rainbow.txt", "Content/Levels/fortress.txt" };
         int levelIndex = 0;
@@ -153,48 +159,89 @@ namespace ab4645_Breakout
         }
 
         private void SpawnRandomPowerUp(Vector2 position) {
-            PowerUp.PowerUpType type = (PowerUp.PowerUpType)Game1.rand.Next(PowerUp.NumberOfPowerUps);
-            switch (type)
+
+            List<Type> types = new List<Type> {
+                typeof(BallSizeUp),
+                typeof(BallSpeedUp),
+                typeof(ExtraBall),
+                typeof(ExtraLife),
+                typeof(PaddleSizeDown),
+                typeof(PaddleSizeUp),
+                typeof(PaddleSpeedDown),
+                typeof(PaddleSpeedUp),
+                typeof(PowerUps.SplitBalls)
+            };
+            
+
+            List<double> weights = new List<double> { 
+                /*BallSizeUp.Weight*/ 2.0,
+                /*BallSpeedUp.Weight*/ 2.0,
+                /*ExtraBall.Weight*/ 3.0,
+                /*ExtraLife.Weight*/ 2.0,
+                /*PaddleSizeDown.Weight*/3.0,
+                /*PaddleSizeUp.Weight*/3.0,
+                /*PaddleSpeedDown.Weight*/1.0,
+                /*PaddleSpeedUp.Weight*/1.0,
+                /*PowerUps.SplitBalls.Weight*/ 10.0
+            };
+
+            double powerUp = Game1.rand.NextDouble()* weights.Sum();
+
+            double runningTotal = 0.0;
+            for(int i = 0; i < weights.Count; i++)
             {
-                case PowerUp.PowerUpType.PaddleSizeUp:
-                    gameObjects.Add(new PaddleSizeUp(this, world, position));
+                runningTotal += weights[i];
+                if(powerUp <= runningTotal)
+                {
+                    ConstructorInfo ctor = types[i].GetConstructor(new[] { typeof(GameplayManager), typeof(World), typeof(Vector2) });
+                    gameObjects.Add((GameObject)ctor.Invoke(new object[] { this, world, position }));
                     break;
-                case PowerUp.PowerUpType.PaddleSizeDown:
-                    gameObjects.Add(new PaddleSizeDown(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.BallSizeUp:
-                    gameObjects.Add(new BallSizeUp(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.BallSizeDown:
-                    gameObjects.Add(new BallSizeDown(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.SplitBalls:
-                    gameObjects.Add(new SplitBalls(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.BallSpeedUp:
-                    gameObjects.Add(new BallSpeedUp(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.BallSpeedDown:
-                    gameObjects.Add(new BallSpeedDown(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.PaddleSpeedUp:
-                    gameObjects.Add(new PaddleSpeedUp(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.PaddleSpeedDown:
-                    gameObjects.Add(new PaddleSpeedDown(this, world, position));
-                    break;
-                //case PowerUp.PowerUpType.StickyPaddle:
-                //    gameObjects.Add(new StickyPaddle(this, world, position));
-                //    break;
-                case PowerUp.PowerUpType.ExtraBall:
-                    gameObjects.Add(new ExtraBall(this, world, position));
-                    break;
-                case PowerUp.PowerUpType.ExtraLife:
-                    gameObjects.Add(new ExtraLife(this, world, position));
-                    break;
-                default:
-                    break;
+                }
             }
+
+
+            //PowerUp.PowerUpType type = (PowerUp.PowerUpType)Game1.rand.Next(PowerUp.NumberOfPowerUps);
+            //switch (type)
+            //{
+            //    case PowerUp.PowerUpType.PaddleSizeUp:
+            //        gameObjects.Add(new PaddleSizeUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSizeDown:
+            //        gameObjects.Add(new PaddleSizeDown(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.BallSizeUp:
+            //        gameObjects.Add(new BallSizeUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.BallSizeDown:
+            //        gameObjects.Add(new BallSizeDown(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.SplitBalls:
+            //        gameObjects.Add(new SplitBalls(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.BallSpeedUp:
+            //        gameObjects.Add(new BallSpeedUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.BallSpeedDown:
+            //        gameObjects.Add(new BallSpeedDown(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSpeedUp:
+            //        gameObjects.Add(new PaddleSpeedUp(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.PaddleSpeedDown:
+            //        gameObjects.Add(new PaddleSpeedDown(this, world, position));
+            //        break;
+            //    //case PowerUp.PowerUpType.StickyPaddle:
+            //    //    gameObjects.Add(new StickyPaddle(this, world, position));
+            //    //    break;
+            //    case PowerUp.PowerUpType.ExtraBall:
+            //        gameObjects.Add(new ExtraBall(this, world, position));
+            //        break;
+            //    case PowerUp.PowerUpType.ExtraLife:
+            //        gameObjects.Add(new ExtraLife(this, world, position));
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
 
         private void UpdatePlaying(GameTime gameTime)
@@ -227,12 +274,14 @@ namespace ab4645_Breakout
                 player1.Paddle.CleanUp();
                 gameObjects.Remove(player1.Paddle);
                 player1 = null;
+                player2WaitTime = 20.0f;
             }
             if (player2 != null && !player2.Alive)
             {
                 player2.Paddle.CleanUp();
                 gameObjects.Remove(player2.Paddle);
                 player2 = null;
+                player2WaitTime = 20.0f;
             }
 
             if (!APlayerIsAlive())
@@ -240,18 +289,24 @@ namespace ab4645_Breakout
                 GameOver();
             }
 
-            DropInPlayer2();
+            DropInPlayer2(gameTime);
 
         }
 
-        private void DropInPlayer2()
+        private void DropInPlayer2(GameTime gameTime)
         {
+            if (twoPlayers && player2WaitTime > 0) {
+                player2WaitTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                return;
+            }
             if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Start) && player1 == null)
             {
+                twoPlayers = true;
                 JoinGame(PlayerIndex.One);
             }
             else if (InputHandler.IsButtonDown(PlayerIndex.Two, PlayerInput.Start) && player2 == null)
             {
+                twoPlayers = true;
                 JoinGame(PlayerIndex.Two);
             }
         }
@@ -290,6 +345,7 @@ namespace ab4645_Breakout
         }
 
         private void RestartGame(PlayerIndex player) {
+            twoPlayers = false;
             levelIndex = 0;
             player1 = null;
             player2 = null;
@@ -392,31 +448,59 @@ namespace ab4645_Breakout
         }
 
         public void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle(0, 0, (int)sideMargin, (int)screenHeight), new Color(12,12,71,255)/*Color.Lerp(bgFrom,bgTo,bgLerpTime/bgLerpLength)*/);
-            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle((int)(screenWidth - sideMargin), 0, (int)sideMargin, (int)screenHeight), new Color(12, 12, 71, 255)/*Color.Lerp(bgFrom, bgTo, bgLerpTime / bgLerpLength)*/);
+            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle(0, 0, (int)sideMargin, (int)screenHeight), Color.Black/*new Color(12,12,71,255)/*Color.Lerp(bgFrom,bgTo,bgLerpTime/bgLerpLength)*/);
+            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle((int)(screenWidth - sideMargin), 0, (int)sideMargin, (int)screenHeight), Color.Black/*new Color(12, 12, 71, 255)/*Color.Lerp(bgFrom, bgTo, bgLerpTime / bgLerpLength)*/);
             foreach (GameObject go in gameObjects)
                 go.Draw(spriteBatch);
 
-            //Draw lives:
-            Texture2D heart = AssetManager.GetTexture("heart");
-            if (player1 != null) {
-                for (int i = 0; i < player1.Lives; i++) {
-                    spriteBatch.Draw(heart, new Vector2(sideMargin + i * (heart.Width + 10.0f) + 10.0f, screenHeight - heart.Height - 10.0f), Color.White);
-                }
-            }
-            Texture2D heart2 = AssetManager.GetTexture("heart_blue");
-            if (player2 != null)
-            {
-                for (int i = 0; i < player2.Lives; i++)
-                {
-                    spriteBatch.Draw(heart2, new Vector2(screenWidth - sideMargin - heart2.Width - i * (heart2.Width + 10.0f) - 10.0f, screenHeight - heart2.Height - 10.0f), Color.White);
-                }
-            }
+            
 
 
             switch (currentGameState)
             {
                 case GameState.Playing:
+                    //Draw lives:
+                    Texture2D heart = AssetManager.GetTexture("heart");
+                    if (player1 != null)
+                    {
+                        for (int i = 0; i < player1.Lives; i++)
+                        {
+                            spriteBatch.Draw(heart, new Vector2(sideMargin + i * (heart.Width + 10.0f) + 10.0f, screenHeight - heart.Height - 10.0f), Color.White);
+                        }
+                    }
+                    else if (twoPlayers && player2WaitTime > 0)
+                    {
+                        string wait = "Wait " + (int)player2WaitTime + " seconds";
+                        Vector2 waitSize = mainFont.MeasureString(wait);
+                        spriteBatch.DrawString(mainFont, wait, new Vector2(sideMargin + 10.0f, screenHeight - waitSize.Y - 10.0f), Color.White);
+                    }
+                    else
+                    {
+                        string pressStart = "Press start to join";
+                        Vector2 pressStartSize = mainFont.MeasureString(pressStart);
+                        spriteBatch.DrawString(mainFont, pressStart, new Vector2(sideMargin + 10.0f, screenHeight - pressStartSize.Y - 10.0f), Color.White);
+                    }
+
+                    Texture2D heart2 = AssetManager.GetTexture("heart_blue");
+                    if (player2 != null)
+                    {
+                        for (int i = 0; i < player2.Lives; i++)
+                        {
+                            spriteBatch.Draw(heart2, new Vector2(screenWidth - sideMargin - heart2.Width - i * (heart2.Width + 10.0f) - 10.0f, screenHeight - heart2.Height - 10.0f), Color.White);
+                        }
+                    }
+                    else if (twoPlayers && player2WaitTime > 0)
+                    {
+                        string wait = "Wait " + (int)player2WaitTime + " seconds";
+                        Vector2 waitSize = mainFont.MeasureString(wait);
+                        spriteBatch.DrawString(mainFont, wait, new Vector2(screenWidth - sideMargin - waitSize.X - 10.0f, screenHeight - waitSize.Y - 10.0f), Color.White);
+                    }
+                    else
+                    {
+                        string pressStart = "Press start to join";
+                        Vector2 pressStartSize = mainFont.MeasureString(pressStart);
+                        spriteBatch.DrawString(mainFont, pressStart, new Vector2(screenWidth - sideMargin - pressStartSize.X - 10.0f, screenHeight - pressStartSize.Y - 10.0f), Color.White);
+                    }
                     break;
                 case GameState.GameOver:
                     string gameOver = "GAME OVER";

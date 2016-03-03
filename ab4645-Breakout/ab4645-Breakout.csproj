@@ -163,9 +163,9 @@
     <Compile Include="ParticleEmitter.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PowerUps\PowerUp.cs" />
-    <Compile Include="PowerUps\BallSizeDown.cs" />
+    <Compile Include="PowerUps\Unused\BallSizeDown.cs" />
     <Compile Include="PowerUps\BallSizeUp.cs" />
-    <Compile Include="PowerUps\BallSpeedDown.cs" />
+    <Compile Include="PowerUps\Unused\BallSpeedDown.cs" />
     <Compile Include="PowerUps\BallSpeedUp.cs" />
     <Compile Include="PowerUps\ExtraBall.cs" />
     <Compile Include="PowerUps\ExtraLife.cs" />
@@ -174,7 +174,7 @@
     <Compile Include="PowerUps\PaddleSpeedDown.cs" />
     <Compile Include="PowerUps\PaddleSpeedUp.cs" />
     <Compile Include="PowerUps\SplitBalls.cs" />
-    <Compile Include="PowerUps\StickyPaddle.cs" />
+    <Compile Include="PowerUps\Unused\StickyPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Farseer\Settings.cs" />
   </ItemGroup>
