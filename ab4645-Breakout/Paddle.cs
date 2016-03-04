@@ -57,7 +57,7 @@ namespace ab4645_Breakout
             joint.LowerLimit = -maxTranslation + width / 2.0f;
             joint.UpperLimit = maxTranslation - width / 2.0f;
             joint.LimitEnabled = true;
-            body.LinearDamping = 5.0f;
+            body.LinearDamping = 7.0f;
         }
 
         public void Attach(Ball b) {

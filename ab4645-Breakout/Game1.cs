@@ -107,7 +107,7 @@ namespace ab4645_Breakout
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.MidnightBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
             spriteBatch.Draw(AssetManager.GetTexture("level1bg"), Vector2.Zero, Color.White);

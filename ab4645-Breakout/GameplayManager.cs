@@ -392,8 +392,8 @@ namespace ab4645_Breakout
         }
 
         public void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle(0, 0, (int)sideMargin, (int)screenHeight), new Color(12,12,71,255)/*Color.Lerp(bgFrom,bgTo,bgLerpTime/bgLerpLength)*/);
-            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle((int)(screenWidth - sideMargin), 0, (int)sideMargin, (int)screenHeight), new Color(12, 12, 71, 255)/*Color.Lerp(bgFrom, bgTo, bgLerpTime / bgLerpLength)*/);
+            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle(0, 0, (int)sideMargin, (int)screenHeight), Color.Black/*new Color(12,12,71,255)/*Color.Lerp(bgFrom,bgTo,bgLerpTime/bgLerpLength)*/);
+            spriteBatch.Draw(AssetManager.GetTexture("pixel"), new Rectangle((int)(screenWidth - sideMargin), 0, (int)sideMargin, (int)screenHeight), Color.Black/*new Color(12, 12, 71, 255)/*Color.Lerp(bgFrom, bgTo, bgLerpTime / bgLerpLength)*/);
             foreach (GameObject go in gameObjects)
                 go.Draw(spriteBatch);
 
