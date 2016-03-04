@@ -46,9 +46,12 @@ namespace ab4645_Breakout
                     trail = ParticleEmitter.SpawnGenericProjectileEmitterRed(ConvertUnits.ToDisplayUnits(position));
                     break;
             }
-            
 
-            body = BodyFactory.CreateCircle(world, radius, 1, position);
+            trail.startScale = 0.5f * ConvertUnits.ToDisplayUnits(this.radius) / 10.0f;
+            trail.endScale = 0.05f * ConvertUnits.ToDisplayUnits(this.radius) / 10.0f;
+
+
+            body = BodyFactory.CreateCircle(world, this.radius, 1, position);
             body.BodyType = BodyType.Dynamic;
             body.CollidesWith = Category.Cat2 | Category.Cat4;
             body.CollisionCategories = Category.Cat1;
@@ -120,6 +123,8 @@ namespace ab4645_Breakout
         public void UpdateRadius(float radius) {
             this.radius = ConvertUnits.ToSimUnits(radius);
             (body.FixtureList[0].Shape as CircleShape).Radius = this.radius;
+            trail.startScale = 0.5f * radius / 10.0f;
+            trail.endScale = 0.05f * radius / 10.0f;
         }
 
         public void Launch(Vector2 direction) {

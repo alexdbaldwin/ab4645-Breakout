@@ -23,8 +23,8 @@ namespace ab4645_Breakout
         Vector2 acceleration;
         Color startColor;
         Color endColor;
-        float startScale;
-        float endScale;
+        public float startScale;
+        public float endScale;
 
         public Vector2 Position {
             get { return position; }

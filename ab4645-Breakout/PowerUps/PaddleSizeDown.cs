@@ -9,6 +9,7 @@ namespace ab4645_Breakout.PowerUps
 {
     class PaddleSizeDown : PowerUp
     {
+
         public PaddleSizeDown(GameplayManager gm, World world, Vector2 position)
             : base(gm, world, position, PowerUpType.PaddleSizeDown)
         {
