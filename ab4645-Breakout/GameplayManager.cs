@@ -174,7 +174,7 @@ namespace ab4645_Breakout
             
 
             List<double> weights = new List<double> { 
-                /*BallSizeUp.Weight*/ 2.0,
+                /*BallSizeUp.Weight*/ 6.0,
                 /*BallSpeedUp.Weight*/ 2.0,
                 /*ExtraBall.Weight*/ 3.0,
                 /*ExtraLife.Weight*/ 2.0,
@@ -182,7 +182,7 @@ namespace ab4645_Breakout
                 /*PaddleSizeUp.Weight*/3.0,
                 /*PaddleSpeedDown.Weight*/1.0,
                 /*PaddleSpeedUp.Weight*/1.0,
-                /*PowerUps.SplitBalls.Weight*/ 10.0
+                /*PowerUps.SplitBalls.Weight*/ 1000.0
             };
 
             double powerUp = Game1.rand.NextDouble()* weights.Sum();
@@ -381,21 +381,18 @@ namespace ab4645_Breakout
                     Vector2 heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                     (gameObjects[i] as Ball).Launch(heading);
 
-                    angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
-                    heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                    for(int j = 0; j < Game1.rand.Next(2,5); j++)
+                    {
+                        angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
+                        heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-                    player.AddBall();
-                    Ball b = new Ball(player, gameObjects[i].Position + new Vector2(0, 0.001f), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
-                    gameObjects.Add(b);
-                    b.Launch(heading);
 
-                    angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
-                    heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-                    player.AddBall();
-                    b = new Ball(player, gameObjects[i].Position - new Vector2(0, 0.001f), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
-                    gameObjects.Add(b);
-                    b.Launch(heading);
+                        player.AddBall();
+                        Ball b = new Ball(player, gameObjects[i].Position + new Vector2(0, 0.001f), ConvertUnits.ToSimUnits(10.0f), ConvertUnits.ToSimUnits(screenHeight), world);
+                        gameObjects.Add(b);
+                        b.Launch(heading);
+                    }
                 }
             }
         }
@@ -425,7 +422,7 @@ namespace ab4645_Breakout
 
         public void EnlargeBalls(Player player)
         {
-            player.BallRadius = MathHelper.Clamp(player.BallRadius * 1.25f, 3f, 30.0f);
+            player.BallRadius = MathHelper.Clamp(player.BallRadius * 1.5f, 10f, 50.0f);
             for (int i = gameObjects.Count - 1; i >= 0; i--)
             {
                 if (gameObjects[i] is Ball && (gameObjects[i] as Ball).Owner == player)
