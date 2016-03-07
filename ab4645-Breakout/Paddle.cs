@@ -16,6 +16,7 @@ namespace ab4645_Breakout
     {
         public float width;
         protected float height;
+        protected GameplayManager gm;
 
         protected float speed = 10.0f;
         protected PrismaticJoint joint;
@@ -27,6 +28,10 @@ namespace ab4645_Breakout
         protected float movementImpulse = 2.0f;
         protected float movementImpulseMin = 0.5f;
         protected float movementImpulseMax = 4.0f;
+        bool gun = false;
+        float gunTimer = 10.0f;
+        float gunShotDelay = 0.5f;
+        float gunShotTimer = 0.5f;
 
         public PlayerIndex PlayerIndex { get { return playerIndex; } }
         public bool Sticky { get { return sticky; } }
@@ -35,8 +40,9 @@ namespace ab4645_Breakout
         protected List<WeldJoint> ballAttachments = new List<WeldJoint>();
 
 
-        public Paddle(PlayerIndex playerIndex, Vector2 position, float width, float height, float maxTranslation, World world) : base(world) {
+        public Paddle(PlayerIndex playerIndex, GameplayManager gm, Vector2 position, float width, float height, float maxTranslation, World world) : base(world) {
             this.playerIndex = playerIndex;
+            this.gm = gm;
             this.width = width;
             this.height = height;
             this.maxTranslation = maxTranslation;
@@ -58,6 +64,7 @@ namespace ab4645_Breakout
             joint.UpperLimit = maxTranslation - width / 2.0f;
             joint.LimitEnabled = true;
             body.LinearDamping = 7.0f;
+
         }
 
         public void Attach(Ball b) {
@@ -162,8 +169,40 @@ namespace ab4645_Breakout
             else if (InputHandler.IsButtonDown(playerIndex, PlayerInput.Right))
                 body.ApplyLinearImpulse(new Vector2(movementImpulse, 0));
 
-            if (InputHandler.IsButtonDown(playerIndex, PlayerInput.A))
+            
+
+
+            if (gun)
+            {
+                gunShotTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                gunTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (gunTimer <= 0)
+                {
+                    gun = false;
+                }
+            }
+
+            if (InputHandler.IsButtonDown(playerIndex, PlayerInput.A)){
                 LaunchBalls();
+                if(gun){
+                    if (gunShotTimer <= 0) {
+                        Shoot();
+                        gunShotTimer = gunShotDelay;
+                    }
+                }
+            }
+        }
+
+        private void Shoot() {
+            gm.SpawnBullet(Position - new Vector2(width, height) / 2 + ConvertUnits.ToSimUnits(new Vector2(13.5f, -7)));
+            gm.SpawnBullet(Position + new Vector2(width, -height) / 2 + ConvertUnits.ToSimUnits(new Vector2(-13.5f, -7)));
+        }
+
+        public void ActivateGun(float time)
+        {
+            gun = true;
+            gunTimer = time;
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -182,6 +221,10 @@ namespace ab4645_Breakout
                     break;
                 default:
                     break;
+            }
+            if (gun) {
+                spriteBatch.Draw(AssetManager.GetTexture("gun"), ConvertUnits.ToDisplayUnits(Position - new Vector2(width, height) / 2) + new Vector2(10, -7), Color.White);
+                spriteBatch.Draw(AssetManager.GetTexture("gun"), ConvertUnits.ToDisplayUnits(Position + new Vector2(width, -height) / 2) + new Vector2(-17, -7), Color.White);
             }
             //spriteBatch.Draw(AssetManager.GetTexture("pixel"), ConvertUnits.ToDisplayUnits(Position), null, Color.White, 0, new Vector2(0.5f, 0.5f), ConvertUnits.ToDisplayUnits(new Vector2(width, height)), SpriteEffects.None, 0);
         }

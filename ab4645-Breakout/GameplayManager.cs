@@ -31,7 +31,7 @@ namespace ab4645_Breakout
         float bgLerpLength = 0.5f;
         SpriteFont mainFont;
         int blocksRemaining = 0;
-        float powerUpSpawnChance = 0.15f;
+        float powerUpSpawnChance = 0.08f;
 
         bool twoPlayers = false;
         float player2WaitTime = 0.0f;
@@ -95,13 +95,17 @@ namespace ab4645_Breakout
             border.Restitution = 1.0f;
         }
 
+        public void ArmPlayer(Player p){
+            p.Paddle.ActivateGun(15);
+        }
+
         private void JoinGame(PlayerIndex playerIndex) {
             switch (playerIndex)
             {
                 case PlayerIndex.One:
                     if (player1 == null)
                     {
-                        Paddle paddle1 = new Paddle(PlayerIndex.One, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
+                        Paddle paddle1 = new Paddle(PlayerIndex.One, this, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
                         gameObjects.Add(paddle1);
                         player1 = new Player(this, paddle1, PlayerIndex.One);
                         SpawnBall(player1);
@@ -115,7 +119,7 @@ namespace ab4645_Breakout
                 case PlayerIndex.Two:
                     if (player2 == null)
                     {
-                        Paddle paddle2 = new Paddle(PlayerIndex.Two, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
+                        Paddle paddle2 = new Paddle(PlayerIndex.Two, this, ConvertUnits.ToSimUnits(screenWidth / 2.0f, screenHeight - 100.0f), ConvertUnits.ToSimUnits(150.0f), ConvertUnits.ToSimUnits(21.0f), ConvertUnits.ToSimUnits(screenWidth / 2.0f - sideMargin), world);
                         gameObjects.Add(paddle2);
                         player2 = new Player(this, paddle2, PlayerIndex.Two);
                         SpawnBall(player2);
@@ -158,6 +162,10 @@ namespace ab4645_Breakout
             
         }
 
+        public void SpawnBullet(Vector2 position) {
+            gameObjects.Add(new Bullet(position, world));
+        }
+
         private void SpawnRandomPowerUp(Vector2 position) {
 
             List<Type> types = new List<Type> {
@@ -169,7 +177,8 @@ namespace ab4645_Breakout
                 typeof(PaddleSizeUp),
                 typeof(PaddleSpeedDown),
                 typeof(PaddleSpeedUp),
-                typeof(PowerUps.SplitBalls)
+                typeof(PowerUps.SplitBalls),
+                typeof(TemporaryGun)
             };
             
 
@@ -182,7 +191,8 @@ namespace ab4645_Breakout
                 /*PaddleSizeUp.Weight*/3.0,
                 /*PaddleSpeedDown.Weight*/1.0,
                 /*PaddleSpeedUp.Weight*/1.0,
-                /*PowerUps.SplitBalls.Weight*/ 1000.0
+                /*PowerUps.SplitBalls.Weight*/ 6.0,
+                /*TemporaryGun*/ 4.0f
             };
 
             double powerUp = Game1.rand.NextDouble()* weights.Sum();
@@ -324,9 +334,15 @@ namespace ab4645_Breakout
                 if (gameObjects[i] is Ball) {
                     (gameObjects[i] as Ball).Owner.Paddle.Attach(gameObjects[i] as Ball);
                 }
-                if (gameObjects[i] is Block || gameObjects[i] is PowerUp) {
+                else if (gameObjects[i] is Block || gameObjects[i] is PowerUp) {
                     gameObjects[i].CleanUp();
                     gameObjects.RemoveAt(i--);
+                }
+                else if (gameObjects[i] is Paddle)
+                {
+                    Vector2 v = gameObjects[i].Position;
+                    v.X = ConvertUnits.ToSimUnits(screenWidth / 2);
+                    gameObjects[i].Position = v;
                 }
 
             }
@@ -383,6 +399,8 @@ namespace ab4645_Breakout
 
                     for(int j = 0; j < Game1.rand.Next(2,5); j++)
                     {
+                        if (player.Balls >= 15)
+                            continue;
                         angle = (float)Game1.rand.NextDouble() * MathHelper.TwoPi;
                         heading = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 

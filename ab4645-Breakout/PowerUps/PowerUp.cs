@@ -26,7 +26,8 @@ namespace ab4645_Breakout
             PaddleSpeedDown = 8,
             ExtraBall = 9,
             ExtraLife = 10,
-            StickyPaddle = 11
+            TemporaryGun = 11,
+            StickyPaddle = 12
         }
 
         public static readonly int NumberOfPowerUps = 11;

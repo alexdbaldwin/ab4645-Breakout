@@ -139,7 +139,7 @@ namespace ab4645_Breakout
 
         private bool NearlyHorizontal(Vector2 v)
         {
-            if (1.0f - Math.Abs(Vector2.Dot(Vector2.Normalize(v), new Vector2(1, 0))) < 0.001f)
+            if (1.0f - Math.Abs(Vector2.Dot(Vector2.Normalize(v), new Vector2(1, 0))) < 0.01f)
                 return true;
             return false;
         }

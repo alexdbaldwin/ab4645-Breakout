@@ -39,7 +39,7 @@ namespace ab4645_Breakout
 
             body = BodyFactory.CreateRectangle(world, width, height, 1, position);
             body.BodyType = BodyType.Static;
-            body.CollidesWith = Category.Cat1;
+            body.CollidesWith = Category.Cat1 | Category.Cat5;
             body.CollisionCategories = Category.Cat4;
             body.Restitution = 1.0f;
             body.Friction = 0.0f;

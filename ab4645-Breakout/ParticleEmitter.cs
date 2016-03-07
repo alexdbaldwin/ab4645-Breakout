@@ -152,6 +152,25 @@ namespace ab4645_Breakout
             return pe;
         }
 
+        public static ParticleEmitter SpawnBulletTrail(Vector2 position)
+        {
+            ParticleEmitter pe = new ParticleEmitter(AssetManager.GetTexture("softparticle"), position);
+            pe.spawnDelay = 0.0001f;
+            pe.spawnTimer = pe.spawnDelay;
+            pe.angleMin = 250;
+            pe.angleMax = 290;
+            pe.speedMin = 60;
+            pe.speedMax = 100;
+            pe.lifetimeMin = 0.05f;
+            pe.lifetimeMax = 0.2f;
+            pe.startColor = Color.White;
+            pe.endColor = Color.Yellow;
+            pe.endColor.A = 200;
+            pe.startScale = 0.6f;
+            pe.endScale = 0.03f;
+            return pe;
+        }
+
         public static ParticleEmitter SpawnFireEmitter(Texture2D tex, Vector2 position)
         {
             ParticleEmitter pe = new ParticleEmitter(tex, position);

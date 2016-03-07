@@ -122,24 +122,26 @@ namespace ab4645_Breakout
                     return Color.LightGreen;
                 case PowerUp.PowerUpType.BallSizeUp:
                     return Color.LightSalmon;
-                case PowerUp.PowerUpType.BallSizeDown:
-                    return Color.MediumPurple;
+                //case PowerUp.PowerUpType.BallSizeDown:
+                //    return Color.MediumPurple;
                 case PowerUp.PowerUpType.SplitBalls:
                     return Color.PaleVioletRed;
                 case PowerUp.PowerUpType.BallSpeedUp:
                     return Color.LightBlue;
-                case PowerUp.PowerUpType.BallSpeedDown:
-                    return Color.LightPink;
+                //case PowerUp.PowerUpType.BallSpeedDown:
+                //    return Color.LightPink;
                 case PowerUp.PowerUpType.PaddleSpeedUp:
                     return Color.LightCyan;
                 case PowerUp.PowerUpType.PaddleSpeedDown:
                     return Color.FloralWhite;
-                case PowerUp.PowerUpType.StickyPaddle:
-                    return Color.LightGray;
+                //case PowerUp.PowerUpType.StickyPaddle:
+                //    return Color.LightGray;
                 case PowerUp.PowerUpType.ExtraBall:
                     return Color.White;
                 case PowerUp.PowerUpType.ExtraLife:
                     return Color.Beige;
+                case PowerUp.PowerUpType.TemporaryGun:
+                    return Color.LightGray;
                 default:
                     return Color.Brown;
             }
@@ -156,24 +158,26 @@ namespace ab4645_Breakout
                     return Color.Green;
                 case PowerUp.PowerUpType.BallSizeUp:
                     return Color.Orange;
-                case PowerUp.PowerUpType.BallSizeDown:
-                    return Color.Purple;
+                //case PowerUp.PowerUpType.BallSizeDown:
+                //    return Color.Purple;
                 case PowerUp.PowerUpType.SplitBalls:
                     return Color.Red;
                 case PowerUp.PowerUpType.BallSpeedUp:
                     return Color.Blue;
-                case PowerUp.PowerUpType.BallSpeedDown:
-                    return Color.HotPink;
+                //case PowerUp.PowerUpType.BallSpeedDown:
+                //    return Color.HotPink;
                 case PowerUp.PowerUpType.PaddleSpeedUp:
                     return Color.Cyan;
                 case PowerUp.PowerUpType.PaddleSpeedDown:
                     return Color.Magenta;
-                case PowerUp.PowerUpType.StickyPaddle:
-                    return Color.DarkGray;
+                //case PowerUp.PowerUpType.StickyPaddle:
+                //    return Color.DarkGray;
                 case PowerUp.PowerUpType.ExtraBall:
                     return Color.White;
                 case PowerUp.PowerUpType.ExtraLife:
                     return Color.SandyBrown;
+                case PowerUp.PowerUpType.TemporaryGun:
+                    return Color.DarkGray;
                 default:
                     return Color.Brown;
             }
@@ -189,24 +193,26 @@ namespace ab4645_Breakout
                     return Color.DarkGreen;
                 case PowerUp.PowerUpType.BallSizeUp:
                     return Color.DarkOrange;
-                case PowerUp.PowerUpType.BallSizeDown:
-                    return Color.DarkViolet;
+                //case PowerUp.PowerUpType.BallSizeDown:
+                //    return Color.DarkViolet;
                 case PowerUp.PowerUpType.SplitBalls:
                     return Color.DarkRed;
                 case PowerUp.PowerUpType.BallSpeedUp:
                     return Color.DarkBlue;
-                case PowerUp.PowerUpType.BallSpeedDown:
-                    return Color.DeepPink;
+                //case PowerUp.PowerUpType.BallSpeedDown:
+                //    return Color.DeepPink;
                 case PowerUp.PowerUpType.PaddleSpeedUp:
                     return Color.DarkCyan;
                 case PowerUp.PowerUpType.PaddleSpeedDown:
                     return Color.DarkMagenta;
-                case PowerUp.PowerUpType.StickyPaddle:
-                    return Color.Black;
+                //case PowerUp.PowerUpType.StickyPaddle:
+                //    return Color.Black;
                 case PowerUp.PowerUpType.ExtraBall:
                     return Color.White;
                 case PowerUp.PowerUpType.ExtraLife:
                     return Color.Brown;
+                case PowerUp.PowerUpType.TemporaryGun:
+                    return Color.Black;
                 default:
                     return Color.Brown;
             }

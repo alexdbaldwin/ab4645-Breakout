@@ -20,7 +20,7 @@ namespace ab4645_Breakout
             get { return dead; }
         }
 
-        public Vector2 Position { get { return body.Position; } }
+        public Vector2 Position { get { return body.Position; } set { body.Position = value; } }
 
         public GameObject(World world) {
             this.world = world;

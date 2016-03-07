@@ -54,6 +54,7 @@ namespace ab4645_Breakout
             spriteBatch = new SpriteBatch(GraphicsDevice);
 #endif
 
+            //Textures
             AssetManager.AddTexture("pixel", Content.Load<Texture2D>("pixel"));
             AssetManager.AddTexture("paddles", Content.Load<Texture2D>("paddles"));
             AssetManager.AddTexture("block", Content.Load<Texture2D>("block"));
@@ -64,11 +65,17 @@ namespace ab4645_Breakout
             AssetManager.AddTexture("level1bg", Content.Load<Texture2D>("level1bg"));
             AssetManager.AddTexture("heart", Content.Load<Texture2D>("heart"));
             AssetManager.AddTexture("heart_blue", Content.Load<Texture2D>("heart_blue"));
+            AssetManager.AddTexture("gun", Content.Load<Texture2D>("gun"));
+
+            //Fonts
             AssetManager.AddFont("main", Content.Load<SpriteFont>("MainFont"));
 
+            //Sound effects
             AssetManager.AddSound("bounce", Content.Load<SoundEffect>("bounce"));
             AssetManager.AddSound("death", Content.Load<SoundEffect>("death"));
             AssetManager.AddSound("powerup", Content.Load<SoundEffect>("powerup_get"));
+
+            //Music
             AssetManager.AddSong("track1", Content.Load<Song>("8bp079-05-random-spontaneous_devotion"));
             gm = new GameplayManager(Content.RootDirectory);
 
@@ -96,7 +103,33 @@ namespace ab4645_Breakout
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 #endif
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Red)) {
+            //    int breakme;
+            //}
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Yellow))
+            //{
+            //    int breakme;
+            //}
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Green))
+            //{
+            //    int breakme;
+            //}
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.Blue))
+            //{
+            //    int breakme;
+            //}
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.A))
+            //{
+            //    int breakme;
+            //}
+            //if (InputHandler.IsButtonDown(PlayerIndex.One, PlayerInput.B))
+            //{
+            //    int breakme;
+            //}
+
             gm.Update(gameTime);
+
+            
 
             base.Update(gameTime);
         }
