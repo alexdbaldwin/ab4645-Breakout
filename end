@@ -1,0 +1,53 @@
+[33mcommit 11d81a51072c84e9938f4b91d559219419008226[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Tue Mar 1 16:24:24 2016 +0100
+
+    Tweaks
+
+[33mcommit 4806093f732476ed6ed53aa96f5674d8b06a01a7[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Tue Mar 1 16:08:36 2016 +0100
+
+    Added some new levels and removed sticky paddle.
+
+[33mcommit 96c0d6675af852747c389f0555ee52d6bb82e3eb[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Tue Mar 1 12:13:19 2016 +0100
+
+    Finished adding power ups.
+
+[33mcommit 825be62b9336bd669c77debe9b1854022497ea29[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Wed Feb 24 16:31:52 2016 +0100
+
+    Implemented a few more power ups and power up randomization
+
+[33mcommit ad44408ceafb6e9978560b65e96f85fbae6c8f31[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Wed Feb 24 07:56:24 2016 +0100
+
+    Implemented power ups
+
+[33mcommit d178e9a90cc5d27da27cf47b5d161472f9a6b4cd[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Fri Feb 12 16:37:59 2016 +0100
+
+    More stuff
+
+[33mcommit 13c2c38943147bf0e6881865be4a648e40ed928f[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Thu Feb 11 08:38:03 2016 +0100
+
+    Tons of features
+
+[33mcommit ea50bfb34689f01eade655f0e2b8fa3d1dc63919[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Mon Feb 8 06:59:25 2016 +0100
+
+    First commit
+
+[33mcommit 64f3f5111fc9551ab4e42a4521852b83e7a4e8b2[m
+Author: alexdbaldwin <alexander.d.baldwin@gmail.com>
+Date:   Mon Feb 8 06:58:32 2016 +0100
+
+    :circus_tent: Added .gitattributes & .gitignore files

@@ -59,6 +59,7 @@ namespace ab4645_Breakout
 
         public GameplayManager(string contentRoot)
         {
+           
             //sideMargin = (screenWidth - tilesX * tileWidth) / 2.0f;
             //bottomMargin = screenHeight - tilesY * tileHeight;
 

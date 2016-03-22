@@ -76,10 +76,10 @@ namespace ab4645_Breakout
             AssetManager.AddSound("powerup", Content.Load<SoundEffect>("powerup_get"));
 
             //Music
-            AssetManager.AddSong("track1", Content.Load<Song>("8bp079-05-random-spontaneous_devotion"));
+           
             gm = new GameplayManager(Content.RootDirectory);
 
-            AudioManager.PlayMusic();
+            
             
         }
 

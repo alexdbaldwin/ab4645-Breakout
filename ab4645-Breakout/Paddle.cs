@@ -182,7 +182,7 @@ namespace ab4645_Breakout
                 }
             }
 
-            if (InputHandler.IsButtonDown(playerIndex, PlayerInput.A)){
+            if (InputHandler.IsButtonDown(playerIndex, PlayerInput.Red)){
                 LaunchBalls();
                 if(gun){
                     if (gunShotTimer <= 0) {

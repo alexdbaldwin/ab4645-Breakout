@@ -128,12 +128,6 @@
 /processorParam:Quality=Best
 /build:death.wav
 
-#begin 8bp079-05-random-spontaneous_devotion.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:8bp079-05-random-spontaneous_devotion.mp3
-
 #begin powerup_get.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
